@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "iot-architecture"
+version = "0.1.0"
+description = ""
+authors = ["Daniele Piccone <1982461+danielepiccone@users.noreply.github.com>"]
+readme = "README.md"
+packages = [
+    { include = "application" },
+    { include = "batch_processor" },
+    { include = "event_processor" },
+    { include = "gateway" },
+    { include = "common" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+paho-mqtt = "^1.6.1"
+jsonschema = "^4.20.0"
+pydantic = "^2.5.2"
+flask = "^3.0.0"
+boto3 = "^1.33.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "23.11.0"
+pre-commit = "^3.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

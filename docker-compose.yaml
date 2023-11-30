@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  gateway:
+    depends_on:
+      - localstack
+    build:
+      context: .
+    command: python3 -u -m gateway
+    env_file:
+      - .env
+
+  producer:
+    depends_on:
+      - gateway
+    build:
+      context: .
+    command: python3 -u -m producer
+    env_file:
+      - .env
+
+  # Comment this out before releasing the lambda
+  event_processor:
+    depends_on:
+      - gateway
+    build:
+      context: .
+    command: python3 -u -m event_processor
+    env_file:
+      - .env
+
+  batch_processor:
+    depends_on:
+      - gateway
+    build:
+      context: .
+    command: python3 -u -m batch_processor
+    env_file:
+      - .env
+
+  application:
+    depends_on:
+      - localstack
+    build:
+      context: .
+    command: python3 -u -m application
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+
+  # mosquitto:
+  #   image: eclipse-mosquitto
+  #   ports:
+  #     - "1883:1883"
+  #     - "8883:8883"
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,dynamodb,lambda,sqs,sns,logs,iam,sts
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LS_LOG=warn
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

@@ -1,0 +1,12 @@
+#!/bin/sh
+project_name=${1:-event_processor}
+dist_dir=dist
+
+rm -rf ${dist_dir}
+mkdir -p ${dist_dir}
+
+pip install . -t ${dist_dir}
+
+(cd ${project_name}/terraform && terraform apply -auto-approve)
+
+rm -rf ${dist_dir}
